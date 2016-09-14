@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+dpkg-reconfigure openssh-server >/dev/null 2>&1
+
+[[ ! -e "/mnt/.default-password" ]] && uuid | cut -b 1-8 > /mnt/.default-password
+
+echo "root:$(cat /mnt/.default-password)" | chpasswd
+
+service ssh start
+
+echo "Default root password for SSH login is: $(cat /mnt/.default-password)" >/dev/stderr
+
+while true; do sleep 365d; done
+
